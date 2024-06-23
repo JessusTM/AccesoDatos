@@ -2,30 +2,35 @@ package Vista;
 
 import Controlador.VentaControlador;
 import Modelo.Venta;
-
-import java.util.Date;
 import java.util.Scanner;
 
 public class VentaMenu {
-    private Scanner lector;
-    private VentaControlador controlador;
-    ViniloMenu  viniloMenu  = new ViniloMenu();
+    // ----- ATRIBUTOS -----
+    private Scanner             lector;
+    private VentaControlador    controlador;
+    ViniloMenu  viniloMenu      = new ViniloMenu();
+    CdMenu cdMenu               = new CdMenu();
+    CaseteMenu caseteMenu       = new CaseteMenu();
 
+
+
+    // ----- CONSTRUCTOR -----
     public VentaMenu() {
         this.lector = new Scanner(System.in);
         this.controlador = new VentaControlador();
     }
 
 
+
     private String elegirTipoProducto() {
         String tipoProducto = null;
         int opcion;
         do {
-            System.out.println("                TIPO DE PRODUCTO");
-            System.out.println("                    [1] Vinilo");
-            System.out.println("                    [2] CD");
-            System.out.println("                    [3] Casete");
-            System.out.print  ("                Opción: ");
+            System.out.println("                TIPO DE PRODUCTO"   );
+            System.out.println("                    [1] Vinilo"     );
+            System.out.println("                    [2] CD"         );
+            System.out.println("                    [3] Casete"     );
+            System.out.print  ("                Opción: "           );
             opcion = lector.nextInt();
             lector.nextLine();
 
@@ -52,11 +57,33 @@ public class VentaMenu {
         return lector.nextLong();
     }
 
-    private Integer ingresarCantidad() {
+    private Integer ingresarCantidadVinilo() {
         System.out.print  ("                    [VINILO] Cantidad   : ");
-        System.out.print("Cantidad: ");
         return lector.nextInt();
     }
+
+    private Long ingresarIdCd() {
+        System.out.print  ("                    [CD] ID         : ");
+        return lector.nextLong();
+    }
+
+    private Integer ingresarCantidadCd() {
+        System.out.print  ("                    [CD] Cantidad   : ");
+        return lector.nextInt();
+    }
+
+    private Long ingresarIdCasete() {
+        System.out.print  ("                    [CASETE] ID         : ");
+        return lector.nextLong();
+    }
+
+    private Integer ingresarCantidadCasete() {
+        System.out.print  ("                    [CASETE] Cantidad   : ");
+        return lector.nextInt();
+    }
+
+
+
 
 
     public void agregarVenta() {
@@ -64,22 +91,32 @@ public class VentaMenu {
         String tipoProducto = elegirTipoProducto();
 
         switch (tipoProducto) {
-            case "Vinilo":
+            case "Vinilo" -> {
                 viniloMenu.listarVinilos();
-                Long idVinilo       = ingresarIdVinilo();
-                Integer cantidad    = ingresarCantidad();
+                Long idVinilo = ingresarIdVinilo();
+                Integer cantidad = ingresarCantidadVinilo();
                 controlador.guardarVentaVinilo(idVinilo, cantidad);
-                System.out.println("        Venta de vinilo registrada exitosamente");
-                break;
-            case "CD":
-                break;
-            case "Casete":
-                break;
-            default:
-                System.out.println("Tipo de producto no válido.");
-                break;
+                System.out.println("        Venta de vinilo registrada exitosamente \n");
+            }
+            case "CD" -> {
+                cdMenu.listarCds();
+                Long idCd           = ingresarIdCd();
+                Integer cantidad    = ingresarCantidadCd();
+                controlador.guardarVentaCd(idCd, cantidad);
+                System.out.println("        Venta de CD registrada exitosamente \n");
+            }
+            case "Casete" -> {
+                caseteMenu.listarCasetes();
+                Long idCasete = ingresarIdCasete();
+                Integer cantidad    = ingresarCantidadCasete();
+                controlador.guardarVentaCasete(idCasete, cantidad);
+                System.out.println("        Venta de casete registrada exitosamente \n");
+            }
+            default -> System.out.println("Tipo de producto no válido.");
+
         }
     }
+
 
 
 
@@ -105,6 +142,8 @@ public class VentaMenu {
 
 
 
+
+
     public void eliminarVenta() {
         System.out.println("                ------- ELIMINAR VENTA ------");
         System.out.print("                    ID : ");
@@ -119,6 +158,4 @@ public class VentaMenu {
             System.out.println("        No se encontró una venta con el ID proporcionado.");
         }
     }
-
-    // Puedes agregar métodos adicionales según las necesidades del menú de ventas
 }

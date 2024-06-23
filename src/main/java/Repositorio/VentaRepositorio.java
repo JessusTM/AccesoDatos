@@ -72,18 +72,6 @@ public class VentaRepositorio implements Repositorio<Venta> {
             stmt.setInt     (3, venta.getCantidad());
             stmt.setDate    (4, new java.sql.Date(venta.getFechaVenta().getTime()));
             stmt.executeUpdate();
-            actualizarStockVinilo(venta.getIdProducto(), venta.getCantidad());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void actualizarStockVinilo(Long idVinilo, int cantidadVenta) {
-        String sql = "UPDATE Vinilos SET stock = stock - ? WHERE idVinilo = ?";
-        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
-            stmt.setInt (1, cantidadVenta);
-            stmt.setLong(2, idVinilo);
-            stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }

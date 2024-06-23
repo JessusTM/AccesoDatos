@@ -12,8 +12,8 @@ public class ViniloMenu {
 
 
     public ViniloMenu() {
-        this.lector = new Scanner(System.in);
-        this.controlador = new ViniloControlador();
+        this.lector         = new Scanner(System.in);
+        this.controlador    = new ViniloControlador();
     }
 
 
@@ -63,6 +63,7 @@ public class ViniloMenu {
 
     public void listarVinilos() {
         System.out.println("                ----------- VINILOS ----------");
+        System.out.println(Vinilo.getHeader());
         controlador.listarVinilos().forEach(System.out::println);
     }
 

@@ -73,10 +73,13 @@ public class Venta {
     // ----- TO STRING -----
     @Override
     public String toString() {
-        return "\t ["   + idVenta       +
-                "] "    + idProducto    +
-                " | "   + tipoProducto  +
-                " | "   + cantidad      +
-                " | "   + fechaVenta;
+        return String.format("| %-7d | %-10d | %-20s | %-8d | %-15s |",
+                idVenta, idProducto, tipoProducto, cantidad, fechaVenta);
+    }
+
+    // ----- GET HEADER -----
+    public static String getHeader() {
+        return String.format("| %-7s | %-10s | %-20s | %-8s | %-15s |",
+                "ID Venta", "ID Producto", "Tipo Producto", "Cantidad", "Fecha Venta");
     }
 }

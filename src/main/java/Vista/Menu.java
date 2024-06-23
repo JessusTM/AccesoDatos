@@ -1,5 +1,7 @@
 package Vista;
 
+import Modelo.Vinilo;
+
 import java.util.Scanner;
 
 public class Menu {
@@ -13,19 +15,19 @@ public class Menu {
         String opcion;
 
         do {
-            System.out.println("==============================");
-            System.out.println("            BODEGA            ");
-            System.out.println("==============================");
-            System.out.println("    [1] Agregar producto      ");
-            System.out.println("    [2] Mostrar productos     ");
-            System.out.println("    [3] Eliminar producto     ");
-            System.out.println("    [4] Modificar producto    ");
-            System.out.println("    [5] Venta                 ");
-            System.out.println("    [6] Salir                 ");
-            System.out.println("==============================");
-            System.out.print  ("    Opción : ");
+            System.out.println("    ==============================");
+            System.out.println("                BODEGA            ");
+            System.out.println("    ==============================");
+            System.out.println("        [1] Agregar producto      ");
+            System.out.println("        [2] Mostrar productos     ");
+            System.out.println("        [3] Eliminar producto     ");
+            System.out.println("        [4] Modificar producto    ");
+            System.out.println("        [5] Venta                 ");
+            System.out.println("        [6] Salir                 ");
+            System.out.println("    ==============================");
+            System.out.print  ("        Opción : ");
             opcion = lector.nextLine();
-            System.out.println("==============================");
+            System.out.println("    ==============================");
 
             switch (opcion) {
                 case "1" -> {
@@ -143,9 +145,6 @@ public class Menu {
                         subOpcion = Integer.parseInt(lector.nextLine());
                         switch (subOpcion) {
                             case 1 -> {
-                                viniloMenu.listarVinilos();
-                                cdMenu.listarCds();
-                                caseteMenu.listarCasetes();
                                 ventaMenu.agregarVenta();
                             }
                             case 2 -> ventaMenu.listarVentas();

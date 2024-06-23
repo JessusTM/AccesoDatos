@@ -122,18 +122,14 @@ public class Vinilo {
 
 
 
-    // ----- TO STRING -----
     @Override
     public String toString() {
-        return  "\t ["  + idVinilo        +
-                "] "    + nombre          +
-                " | "   + artista         +
-                " | "   + peso            +
-                " | "   + tamanio         +
-                " | "   + descripcion     +
-                " | "   + color           +
-                " | "   + precio          +
-                " | "   + stock           +
-                " | "   + fechaRegistro;
+        return String.format("| %-7d | %-30s | %-20s | %-10d | %-10d | %-40s | %-15s | %-10d | %-5d | %-15s |",
+                idVinilo, nombre, artista, peso, tamanio, descripcion, color, precio, stock, fechaRegistro);
+    }
+
+    public static String getHeader() {
+        return String.format("| %-7s | %-30s | %-20s | %-10s | %-10s | %-40s | %-15s | %-10s | %-5s | %-15s |",
+                "ID", "Nombre", "Artista", "Peso", "Tamaño", "Descripción", "Color", "Precio", "Stock", "Fecha Registro");
     }
 }

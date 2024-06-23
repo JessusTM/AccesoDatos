@@ -125,15 +125,13 @@ public class Casete {
     // ----- TO STRING -----
     @Override
     public String toString() {
-        return  "\t ["  + idCasete          +
-                "] "     + nombre           +
-                " | "   + artista           +
-                " | "   + anioPublicacion   +
-                " | "   + minutos           +
-                " | "   + material          +
-                " | "   + tamanio           +
-                " | "   + precio            +
-                " | "   + stock             +
-                " | "   + fechaRegistro;
+        return String.format("| %-7d | %-30s | %-20s | %-10d | %-10d | %-15s | %-10d | %-5d | %-15s |",
+                idCasete, nombre, artista, anioPublicacion, minutos, material, precio, stock, fechaRegistro);
+    }
+
+    // ----- GET HEADER -----
+    public static String getHeader() {
+        return String.format("| %-7s | %-30s | %-20s | %-10s | %-10s | %-15s | %-10s | %-5s | %-15s |",
+                "ID", "Nombre", "Artista", "Año", "Minutos", "Material", "Precio", "Stock", "Fecha Registro");
     }
 }

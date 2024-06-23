@@ -56,6 +56,7 @@ public class CdMenu {
 
     public void listarCds() {
         System.out.println("                ------------ CDs -------------");
+        System.out.println(Cd.getHeader());
         controlador.listarCds().forEach(System.out::println);
     }
 

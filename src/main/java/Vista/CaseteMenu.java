@@ -68,6 +68,7 @@ public class CaseteMenu {
 
     public void listarCasetes() {
         System.out.println("                ---------- CASETES -----------");
+        System.out.println(Casete.getHeader());
         controlador.listarCasetes().forEach(System.out::println);
     }
 
