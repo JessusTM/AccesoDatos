@@ -1,5 +1,7 @@
 package Modelo;
 
+import java.util.Date;
+
 public class Vinilo {
     // ----- ATRIBUTOS -----
     private Long    idVinilo;
@@ -9,14 +11,17 @@ public class Vinilo {
     private Long    tamanio;
     private String  descripcion;
     private String  color;
-    private Inventario inventario;
+    private Long    precio;
+    private Integer stock;
+    private Date    fechaRegistro;
 
 
 
     // ----- CONSTRUCTORES -----
-    public Vinilo(  Long idVinilo   , String nombre , String artista        ,
-                    Long peso       , Long tamanio  , String descripcion    ,
-                    String color    , Inventario inventario) {
+    public Vinilo(  Long idVinilo       , String nombre         , String artista        ,
+                    Long peso           , Long tamanio          , String descripcion    ,
+                    String color        , Long precio           , Integer stock         ,
+                    Date fechaRegistro  ) {
         this.idVinilo       = idVinilo;
         this.nombre         = nombre;
         this.artista        = artista;
@@ -24,7 +29,9 @@ public class Vinilo {
         this.tamanio        = tamanio;
         this.descripcion    = descripcion;
         this.color          = color;
-        this.inventario     = inventario;
+        this.precio         = precio;
+        this.stock          = stock;
+        this.fechaRegistro  = fechaRegistro;
     }
 
     public Vinilo() {
@@ -89,25 +96,42 @@ public class Vinilo {
         this.color = color;
     }
 
-    public Inventario getInventario() {
-        return inventario;
+    public Long getPrecio() {
+        return precio;
     }
 
-    public void setInventario(Inventario inventario) {
-        this.inventario = inventario;
+    public void setPrecio(Long precio) {
+        this.precio = precio;
     }
 
+    public Integer getStock() {
+        return stock;
+    }
 
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }
+
+    public Date getFechaRegistro() {
+        return fechaRegistro;
+    }
+
+    public void setFechaRegistro(Date fechaRegistro) {
+        this.fechaRegistro = fechaRegistro;
+    }
 
     // ----- TO STRING -----
     @Override
     public String toString() {
-        return  "\t [" + idVinilo        + "]" +
-                " | " + nombre          +
-                " | " + artista         +
-                " | " + peso            +
-                " | " + tamanio         +
-                " | " + descripcion     +
-                " | " + color;
+        return  "\t ["  + idVinilo        +
+                "] "     + nombre          +
+                " | "   + artista         +
+                " | "   + peso            +
+                " | "   + tamanio         +
+                " | "   + descripcion     +
+                " | "   + color           +
+                " | "   + precio          +
+                " | "   + stock           +
+                " | "   + fechaRegistro;
     }
 }

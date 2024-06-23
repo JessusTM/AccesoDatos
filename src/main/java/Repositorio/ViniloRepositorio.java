@@ -22,6 +22,9 @@ public class ViniloRepositorio implements Repositorio<Vinilo> {
         v.setTamanio        (rs.getLong     ("tamanio"          ));
         v.setDescripcion    (rs.getString   ("descripcion"      ));
         v.setColor          (rs.getString   ("color"            ));
+        v.setPrecio         (rs.getLong     ("precio"           ));
+        v.setStock          (rs.getInt      ("stock"            ));
+        v.setFechaRegistro  (rs.getDate     ("fecha_registro"   ));
         return v;
     }
 
@@ -29,9 +32,10 @@ public class ViniloRepositorio implements Repositorio<Vinilo> {
 
     @Override
     public List<Vinilo> listar() {
+        String sql = "SELECT * FROM Vinilos";
         List<Vinilo> vinilos = new ArrayList<>();
         try (Statement stmt = getConnection().createStatement();
-             ResultSet rs   = stmt.executeQuery("SELECT * FROM Vinilos")) {
+             ResultSet rs   = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 Vinilo v = crearVinilo(rs);
                 vinilos.add(v);
@@ -46,8 +50,9 @@ public class ViniloRepositorio implements Repositorio<Vinilo> {
 
     @Override
     public Vinilo porId(Long id) {
-        Vinilo vinilo = null;
-        try (PreparedStatement stmt = getConnection().prepareStatement("SELECT * FROM Vinilos WHERE idVinilo = ?")) {
+        String sql      = "SELECT * FROM Vinilos WHERE idvinilo = ?";
+        Vinilo vinilo   = null;
+        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
             stmt.setLong(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -66,23 +71,27 @@ public class ViniloRepositorio implements Repositorio<Vinilo> {
     public void guardar(Vinilo vinilo) {
         String sql;
         if (vinilo.getIdVinilo() != null && vinilo.getIdVinilo() > 0) {
-            sql = "UPDATE Vinilos SET nombre = ?, artista = ?, peso = ?, tamanio = ?, descripcion = ?, color = ? WHERE idVinilo = ?";
+            sql = "UPDATE Vinilos SET nombre = ?, artista = ?, peso = ?, tamanio = ?, descripcion = ?, color = ?, precio = ?, stock = ? WHERE idvinilo = ?";
         } else {
-            sql = "INSERT INTO Vinilos(nombre, artista, peso, tamanio, descripcion, color) VALUES (?, ?, ?, ?, ?, ?)";
+            sql = "INSERT INTO Vinilos(nombre, artista, peso, tamanio, descripcion, color, precio, stock, fecha_registro) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         }
         try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
             stmt.setString  (1, vinilo.getNombre()      );
             stmt.setString  (2, vinilo.getArtista()     );
-            stmt.setLong    (4, vinilo.getPeso()        );
-            stmt.setLong    (5, vinilo.getTamanio()     );
-            stmt.setString  (6, vinilo.getDescripcion() );
-            stmt.setString  (7, vinilo.getColor()       );
+            stmt.setLong    (3, vinilo.getPeso()        );
+            stmt.setLong    (4, vinilo.getTamanio()     );
+            stmt.setString  (5, vinilo.getDescripcion() );
+            stmt.setString  (6, vinilo.getColor()       );
+            stmt.setLong    (7, vinilo.getPrecio()      );
+            stmt.setInt     (8, vinilo.getStock()       );
             if (vinilo.getIdVinilo() != null && vinilo.getIdVinilo() > 0) {
-                stmt.setLong(8, vinilo.getIdVinilo());
+                stmt.setLong(9, vinilo.getIdVinilo());
+            } else {
+                stmt.setDate(9, new java.sql.Date(vinilo.getFechaRegistro().getTime()));
             }
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -90,7 +99,7 @@ public class ViniloRepositorio implements Repositorio<Vinilo> {
 
     @Override
     public void eliminar(Long id) {
-        try (PreparedStatement stmt = getConnection().prepareStatement("DELETE FROM Vinilos WHERE idVinilo = ?")) {
+        try (PreparedStatement stmt = getConnection().prepareStatement("DELETE FROM Vinilos WHERE idvinilo = ?")) {
             stmt.setLong(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {

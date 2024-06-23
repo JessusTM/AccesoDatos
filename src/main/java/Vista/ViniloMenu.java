@@ -27,6 +27,7 @@ public class ViniloMenu {
 
         System.out.print("                    Peso        : ");
         Long peso = lector.nextLong();
+        lector.nextLine();
 
         System.out.print("                    Tamaño      : ");
         Long tamanio = lector.nextLong();
@@ -38,14 +39,18 @@ public class ViniloMenu {
         System.out.print("                    Color       : ");
         String color = lector.nextLine();
 
+        System.out.print("                    Precio      : ");
+        Long precio = lector.nextLong();
+        lector.nextLine();
+
         System.out.print("                    Stock       : ");
         Integer stock = lector.nextInt();
         lector.nextLine();
 
-        return new Vinilo(null, nombre, artista, peso, tamanio, descripcion, color);
+        Date fechaRegistro = new Date();
+
+        return new Vinilo(null, nombre, artista, peso, tamanio, descripcion, color, precio, stock, fechaRegistro);
     }
-
-
 
     public void agregarVinilo() {
         System.out.println("                ------- AGREGAR VINILO -------");
@@ -81,9 +86,17 @@ public class ViniloMenu {
         System.out.println("                ------- ELIMINAR VINILO ------");
         System.out.print("                    ID : ");
         Long id = lector.nextLong();
-        controlador.eliminarVinilo(id);
-        System.out.println("            Vinilo eliminado exitosamente");
+        lector.nextLine();
+
+        Vinilo viniloAEliminar = controlador.obtenerViniloPorId(id);
+        if (viniloAEliminar != null) {
+            controlador.eliminarVinilo(id);
+            System.out.println("            Vinilo eliminado exitosamente");
+        } else {
+            System.out.println("        No se encontró un vinilo con el ID proporcionado.");
+        }
     }
+
 
 
 

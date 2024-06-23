@@ -7,18 +7,21 @@ public class Casete {
     private Long        idCasete;
     private String      nombre;
     private String      artista;
-    private Date        anioPublicacion;
+    private Integer     anioPublicacion; // Cambiado a Integer
     private Long        minutos;
     private String      material;
     private Long        tamanio;
-    private Inventario  inventario;
+    private Long        precio;
+    private Integer     stock;
+    private Date        fechaRegistro;
 
 
 
     // ----- CONSTRUCTORES -----
-    public Casete(Long idCasete         , String nombre         , String artista    ,
-                  Date anioPublicacion  , Long minutos          , String material   ,
-                  Long tamanio          , Inventario inventario ) {
+    public Casete(  Long idCasete               , String nombre             , String artista        ,
+                    Integer anioPublicacion     , Long minutos              , String material       ,
+                    Long tamanio                , Long precio               , Integer stock         ,
+                    Date fechaRegistro) {
         this.idCasete           = idCasete;
         this.nombre             = nombre;
         this.artista            = artista;
@@ -26,7 +29,9 @@ public class Casete {
         this.minutos            = minutos;
         this.material           = material;
         this.tamanio            = tamanio;
-        this.inventario         = inventario;
+        this.precio             = precio;
+        this.stock              = stock;
+        this.fechaRegistro      = fechaRegistro;
     }
 
     public Casete() {
@@ -59,11 +64,11 @@ public class Casete {
         this.artista = artista;
     }
 
-    public Date getAnioPublicacion() {
+    public Integer getAnioPublicacion() {
         return anioPublicacion;
     }
 
-    public void setAnioPublicacion(Date anioPublicacion) {
+    public void setAnioPublicacion(Integer anioPublicacion) {
         this.anioPublicacion = anioPublicacion;
     }
 
@@ -91,12 +96,28 @@ public class Casete {
         this.tamanio = tamanio;
     }
 
-    public Inventario getInventario() {
-        return inventario;
+    public Long getPrecio() {
+        return precio;
     }
 
-    public void setInventario(Inventario inventario) {
-        this.inventario = inventario;
+    public void setPrecio(Long precio) {
+        this.precio = precio;
+    }
+
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }
+
+    public Date getFechaRegistro() {
+        return fechaRegistro;
+    }
+
+    public void setFechaRegistro(Date fechaRegistro) {
+        this.fechaRegistro = fechaRegistro;
     }
 
 
@@ -104,12 +125,15 @@ public class Casete {
     // ----- TO STRING -----
     @Override
     public String toString() {
-        return  "\t [" + idCasete       + "]" +
-                " | " +  nombre         +
-                " | " + artista         +
-                " | " + anioPublicacion +
-                " | " + minutos         +
-                " | " + material        +
-                " | " + tamanio;
+        return  "\t ["  + idCasete          +
+                "] "     + nombre            +
+                " | "   + artista           +
+                " | "   + anioPublicacion   +
+                " | "   + minutos           +
+                " | "   + material          +
+                " | "   + tamanio           +
+                " | "   + precio            +
+                " | "   + stock             +
+                " | "   + fechaRegistro;
     }
 }

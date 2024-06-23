@@ -40,8 +40,8 @@ public class Menu {
                         case "1" -> viniloMenu.agregarVinilo();
                         case "2" -> cdMenu.agregarCd();
                         case "3" -> caseteMenu.agregarCasete();
-                        case "4" -> System.out.println("    Volviendo al menú principal...");
-                        default -> System.out.println("    Ingrese una opción válida... ");
+                        case "4" -> System.out.println("        Volviendo al menú principal...");
+                        default -> System.out.println("         Ingrese una opción válida... ");
                     }
                 }
                 case "2" -> {
@@ -71,30 +71,33 @@ public class Menu {
                 }
                 case "3" -> {
                     System.out.println("                         # INVENTARIO  #      ");
-                    System.out.println("                ------------------------------");
-                    System.out.println("                    [1] Eliminar Vinilo       ");
-                    System.out.println("                    [2] Eliminar CD           ");
-                    System.out.println("                    [3] Eliminar Casete       ");
-                    System.out.println("                    [4] Salir                 ");
-                    System.out.println("                ------------------------------");
-                    System.out.print  ("                    Opción : ");
-                    String subOpcion = lector.nextLine();
-                    switch (subOpcion) {
-                        case "1" -> {
-                            viniloMenu.listarVinilos();
-                            viniloMenu.eliminarVinilo();
+                    int subOpcion;
+                    do {
+                        System.out.println("                ------------------------------");
+                        System.out.println("                    [1] Eliminar Vinilo       ");
+                        System.out.println("                    [2] Eliminar CD           ");
+                        System.out.println("                    [3] Eliminar Casete       ");
+                        System.out.println("                    [4] Salir                 ");
+                        System.out.println("                ------------------------------");
+                        System.out.print("                    Opción : ");
+                        subOpcion = lector.nextInt();
+                        switch (subOpcion) {
+                            case 1 -> {
+                                viniloMenu.listarVinilos();
+                                viniloMenu.eliminarVinilo();
+                            }
+                            case 2 -> {
+                                cdMenu.listarCds();
+                                cdMenu.eliminarCd();
+                            }
+                            case 3 -> {
+                                caseteMenu.listarCasetes();
+                                caseteMenu.eliminarCasete();
+                            }
+                            case 4 -> System.out.println("    Volviendo al menú principal...");
+                            default -> System.out.println("    Ingrese una opción válida... ");
                         }
-                        case "2" -> {
-                            cdMenu.listarCds();
-                            cdMenu.eliminarCd();
-                        }
-                        case "3" -> {
-                            caseteMenu.listarCasetes();
-                            caseteMenu.eliminarCasete();
-                        }
-                        case "4"    -> System.out.println("    Volviendo al menú principal...");
-                        default     -> System.out.println("    Ingrese una opción válida... ");
-                    }
+                    } while (subOpcion != 4);
                 }
                 case "4" -> {
                     System.out.println("                         # INVENTARIO  #      ");

@@ -18,8 +18,11 @@ public class CdRepositorio implements Repositorio<Cd> {
         c.setIdCd               (rs.getLong         ("idcd"             ));
         c.setNombre             (rs.getString       ("nombre"           ));
         c.setArtista            (rs.getString       ("artista"          ));
-        c.setAnioPublicacion    (rs.getDate         ("anio_publicacion" ));
+        c.setAnioPublicacion    (rs.getInt          ("anio_publicacion" ));
         c.setMinutos            (rs.getLong         ("minutos"          ));
+        c.setPrecio             (rs.getLong         ("precio"           ));
+        c.setStock              (rs.getInt          ("stock"            ));
+        c.setFechaRegistro      (rs.getDate         ("fecha_registro"   ));
         return c;
     }
 
@@ -27,9 +30,10 @@ public class CdRepositorio implements Repositorio<Cd> {
 
     @Override
     public List<Cd> listar() {
+        String sql = "SELECT * FROM Cds";
         List<Cd> cds = new ArrayList<>();
         try (Statement stmt = getConnection().createStatement();
-             ResultSet rs   = stmt.executeQuery("SELECT * FROM Cds")) {
+             ResultSet rs   = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 Cd c = crearCd(rs);
                 cds.add(c);
@@ -46,7 +50,7 @@ public class CdRepositorio implements Repositorio<Cd> {
     public Cd porId(Long id) {
         Cd cd = null;
         String sql = "SELECT * FROM Cds WHERE idcd = ?";
-        try (PreparedStatement stmt = getConnection().prepareStatement("SELECT * FROM Cds WHERE idcd = ?")) {
+        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
             stmt.setLong(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -65,17 +69,20 @@ public class CdRepositorio implements Repositorio<Cd> {
     public void guardar(Cd cd) {
         String sql;
         if (cd.getIdCd() != null && cd.getIdCd() > 0) {
-            sql = "UPDATE Cds SET nombre = ?, artista = ?, anio_publicacion = ?, minutos = ? WHERE idcd = ?";
+            sql = "UPDATE Cds SET nombre = ?, artista = ?, anio_publicacion = ?, minutos = ?, precio = ?, stock = ?, fecha_registro = ? WHERE idcd = ?";
         } else {
-            sql = "INSERT INTO Cds(nombre, artista, anio_publicacion, minutos) VALUES (?, ?, ?, ?)";
+            sql = "INSERT INTO Cds(nombre, artista, anio_publicacion, minutos, precio, stock, fecha_registro) VALUES (?, ?, ?, ?, ?, ?, ?)";
         }
         try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
-            stmt.setString      (1, cd.getNombre()  );
-            stmt.setString      (2, cd.getArtista() );
-            stmt.setDate        (3, new java.sql.Date(cd.getAnioPublicacion().getTime()));
-            stmt.setLong        (4, cd.getMinutos() );
+            stmt.setString  (1, cd.getNombre()              );
+            stmt.setString  (2, cd.getArtista()             );
+            stmt.setInt     (3, cd.getAnioPublicacion()     );
+            stmt.setLong    (4, cd.getMinutos()             );
+            stmt.setLong    (5, cd.getPrecio()              );
+            stmt.setInt     (6, cd.getStock()               );
+            stmt.setDate    (7, new java.sql.Date(cd.getFechaRegistro().getTime()));
             if (cd.getIdCd() != null && cd.getIdCd() > 0) {
-                stmt.setLong(5, cd.getIdCd());
+                stmt.setLong(8, cd.getIdCd());
             }
             stmt.executeUpdate();
         } catch (SQLException e) {

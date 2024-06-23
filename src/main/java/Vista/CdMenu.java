@@ -22,14 +22,21 @@ public class CdMenu {
         String artista = lector.nextLine();
 
         System.out.print("                    Año Publicación  : ");
-        Date anioPublicacion = new Date(lector.nextLong());
+        int anioPublicacion = lector.nextInt();
 
         System.out.print("                    Minutos          : ");
         Long minutos = lector.nextLong();
-        lector.nextLine();
 
-        return new Cd(null, nombre, artista, anioPublicacion, minutos);
+        System.out.print("                    Precio           : ");
+        Long precio = lector.nextLong();
+
+        System.out.print("                    Stock            : ");
+        int stock = lector.nextInt();
+        lector.nextLine();  // Consume newline
+
+        return new Cd(null, nombre, artista, anioPublicacion, minutos, precio, stock, new Date());
     }
+
 
 
 

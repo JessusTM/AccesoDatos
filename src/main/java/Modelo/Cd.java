@@ -7,21 +7,26 @@ public class Cd {
     private Long        idCd;
     private String      nombre;
     private String      artista;
-    private Date        anioPublicacion;
+    private Integer     anioPublicacion;
     private Long        minutos;
-    private Inventario  inventario;
+    private Long        precio;
+    private Integer     stock;
+    private Date fechaRegistro;
 
 
 
     // ----- CONSTRUCTORES -----
-    public Cd(Long idCd             , String nombre     , String artista            ,
-              Date anioPublicacion  , Long minutos      , Inventario inventario     ) {
+    public Cd(  Long idCd               , String nombre             , String artista        ,
+                Integer anioPublicacion , Long minutos              , Long precio           ,
+                Integer stock           , Date fechaRegistro        ) {
         this.idCd               = idCd;
         this.nombre             = nombre;
         this.artista            = artista;
         this.anioPublicacion    = anioPublicacion;
         this.minutos            = minutos;
-        this.inventario         = inventario;
+        this.precio             = precio;
+        this.stock              = stock;
+        this.fechaRegistro      = fechaRegistro;
     }
 
     public Cd() {
@@ -54,11 +59,11 @@ public class Cd {
         this.artista = artista;
     }
 
-    public Date getAnioPublicacion() {
+    public Integer getAnioPublicacion() {
         return anioPublicacion;
     }
 
-    public void setAnioPublicacion(Date anioPublicacion) {
+    public void setAnioPublicacion(Integer anioPublicacion) {
         this.anioPublicacion = anioPublicacion;
     }
 
@@ -70,12 +75,28 @@ public class Cd {
         this.minutos = minutos;
     }
 
-    public Inventario getInventario() {
-        return inventario;
+    public Long getPrecio() {
+        return precio;
     }
 
-    public void setInventario(Inventario inventario) {
-        this.inventario = inventario;
+    public void setPrecio(Long precio) {
+        this.precio = precio;
+    }
+
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }
+
+    public Date getFechaRegistro() {
+        return fechaRegistro;
+    }
+
+    public void setFechaRegistro(Date fechaRegistro) {
+        this.fechaRegistro = fechaRegistro;
     }
 
 
@@ -83,10 +104,13 @@ public class Cd {
     // ----- TO STRING -----
     @Override
     public String toString() {
-        return  "\t [" + idCd           + "]" +
-                " | " + nombre          +
-                " | " + artista         +
-                " | " + anioPublicacion +
-                " | " + minutos;
+        return  "\t ["  + idCd              +
+                "] "     + nombre          +
+                " | "   + artista         +
+                " | "   + anioPublicacion +
+                " | "   + minutos         +
+                " | "   + precio          +
+                " | "   + stock           +
+                " | "   + fechaRegistro;
     }
 }

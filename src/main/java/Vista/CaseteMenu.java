@@ -4,7 +4,6 @@ import java.util.Scanner;
 import java.util.Date;
 import Controlador.*;
 import Modelo.Casete;
-import Modelo.Cd;
 
 public class CaseteMenu {
     private Scanner lector;
@@ -13,8 +12,8 @@ public class CaseteMenu {
 
 
     public CaseteMenu() {
-        this.lector = new Scanner(System.in);
-        this.controlador = new CaseteControlador();
+        this.lector         = new Scanner(System.in);
+        this.controlador    = new CaseteControlador();
     }
 
 
@@ -27,7 +26,7 @@ public class CaseteMenu {
         String artista = lector.nextLine();
 
         System.out.print("                    Año Publicación  : ");
-        Date anioPublicacion = new Date(lector.nextLong());
+        Integer anioPublicacion = lector.nextInt();
         lector.nextLine();
 
         System.out.print("                    Minutos          : ");
@@ -41,9 +40,17 @@ public class CaseteMenu {
         Long tamanio = lector.nextLong();
         lector.nextLine();
 
-        return new Casete(  null    , nombre    , artista   ,
-                            anioPublicacion , minutos   , material  ,
-                            tamanio );
+        System.out.print("                    Precio           : ");
+        Long precio = lector.nextLong();
+        lector.nextLine();
+
+        System.out.print("                    Stock            : ");
+        Integer stock = lector.nextInt();
+        lector.nextLine();
+
+        Date fechaRegistro = new Date();
+
+        return new Casete(null, nombre, artista, anioPublicacion, minutos, material, tamanio, precio, stock, fechaRegistro);
     }
 
 

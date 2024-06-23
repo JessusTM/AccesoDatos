@@ -1,6 +1,6 @@
 package Controlador;
 
-import Modelo.Casete;
+import Modelo.*;
 import Repositorio.CaseteRepositorio;
 
 import java.util.List;
