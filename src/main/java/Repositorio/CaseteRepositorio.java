@@ -32,8 +32,8 @@ public class CaseteRepositorio implements Repositorio<Casete> {
 
     @Override
     public List<Casete> listar() {
-        String sql = "SELECT * FROM Casetes";
-        List<Casete> casetes = new ArrayList<>();
+        String sql              = "SELECT * FROM Casetes";
+        List<Casete> casetes    = new ArrayList<>();
         try (Statement stmt = getConnection().createStatement();
              ResultSet rs   = stmt.executeQuery(sql)) {
             while (rs.next()) {
@@ -50,8 +50,8 @@ public class CaseteRepositorio implements Repositorio<Casete> {
 
     @Override
     public Casete porId(Long id) {
-        Casete casete = null;
-        String sql = "SELECT * FROM Casetes WHERE idcasete = ?";
+        Casete casete   = null;
+        String sql      = "SELECT * FROM Casetes WHERE idcasete = ?";
         try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
             stmt.setLong(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -98,7 +98,7 @@ public class CaseteRepositorio implements Repositorio<Casete> {
 
     @Override
     public void eliminar(Long id) {
-        try (PreparedStatement stmt     = getConnection().prepareStatement("DELETE FROM Casetes WHERE idcasete = ?")) {
+        try (PreparedStatement stmt = getConnection().prepareStatement("DELETE FROM Casetes WHERE idcasete = ?")) {
             stmt.setLong(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {

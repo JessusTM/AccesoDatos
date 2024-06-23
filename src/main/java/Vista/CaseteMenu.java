@@ -6,11 +6,13 @@ import Controlador.*;
 import Modelo.Casete;
 
 public class CaseteMenu {
+    // ----- ATRIBUTOS -----
     private Scanner lector;
     private CaseteControlador controlador;
 
 
 
+    // ----- CONSTRUCTOR -----
     public CaseteMenu() {
         this.lector         = new Scanner(System.in);
         this.controlador    = new CaseteControlador();

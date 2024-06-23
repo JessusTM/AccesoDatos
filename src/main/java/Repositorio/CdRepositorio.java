@@ -30,8 +30,8 @@ public class CdRepositorio implements Repositorio<Cd> {
 
     @Override
     public List<Cd> listar() {
-        String sql = "SELECT * FROM Cds";
-        List<Cd> cds = new ArrayList<>();
+        String sql      = "SELECT * FROM Cds";
+        List<Cd> cds    = new ArrayList<>();
         try (Statement stmt = getConnection().createStatement();
              ResultSet rs   = stmt.executeQuery(sql)) {
             while (rs.next()) {
@@ -48,8 +48,8 @@ public class CdRepositorio implements Repositorio<Cd> {
 
     @Override
     public Cd porId(Long id) {
-        Cd cd = null;
-        String sql = "SELECT * FROM Cds WHERE idcd = ?";
+        Cd cd       = null;
+        String sql  = "SELECT * FROM Cds WHERE idcd = ?";
         try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
             stmt.setLong(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -94,7 +94,8 @@ public class CdRepositorio implements Repositorio<Cd> {
 
     @Override
     public void eliminar(Long id) {
-        try (PreparedStatement stmt = getConnection().prepareStatement("DELETE FROM Cds WHERE idcd = ?")) {
+        String sql = "DELETE FROM Cds WHERE idcd = ?";
+        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
             stmt.setLong(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {

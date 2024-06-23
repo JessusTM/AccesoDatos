@@ -9,6 +9,7 @@ public class Menu {
         ViniloMenu  viniloMenu  = new ViniloMenu();
         CdMenu      cdMenu      = new CdMenu();
         CaseteMenu  caseteMenu  = new CaseteMenu();
+        VentaMenu ventaMenu     = new VentaMenu();
         String opcion;
 
         do {
@@ -19,7 +20,8 @@ public class Menu {
             System.out.println("    [2] Mostrar productos     ");
             System.out.println("    [3] Eliminar producto     ");
             System.out.println("    [4] Modificar producto    ");
-            System.out.println("    [5] Salir                 ");
+            System.out.println("    [5] Venta                 ");
+            System.out.println("    [6] Salir                 ");
             System.out.println("==============================");
             System.out.print  ("    Opción : ");
             opcion = lector.nextLine();
@@ -126,10 +128,44 @@ public class Menu {
                         default     -> System.out.println("    Ingrese una opción válida... ");
                     }
                 }
-                case "5"    -> System.out.println(" Hasta luego... ");
+                case "5" -> {
+                    int subOpcion;
+                    do {
+                        System.out.println("                         # VENTAS  #      ");
+                        System.out.println("                ------------------------------");
+                        System.out.println("                    [1] Registrar Venta       ");
+                        System.out.println("                    [2] Listar Ventas         ");
+                        System.out.println("                    [3] Buscar Venta por ID   ");
+                        System.out.println("                    [4] Eliminar Venta        ");
+                        System.out.println("                    [5] Salir                 ");
+                        System.out.println("                ------------------------------");
+                        System.out.print("                    Opción : ");
+                        subOpcion = Integer.parseInt(lector.nextLine());
+                        switch (subOpcion) {
+                            case 1 -> {
+                                viniloMenu.listarVinilos();
+                                cdMenu.listarCds();
+                                caseteMenu.listarCasetes();
+                                ventaMenu.agregarVenta();
+                            }
+                            case 2 -> ventaMenu.listarVentas();
+                            case 3 -> {
+                                ventaMenu.listarVentas();
+                                ventaMenu.buscarVentaPorId();
+                            }
+                            case 4 -> {
+                                ventaMenu.listarVentas();
+                                ventaMenu.eliminarVenta();
+                            }
+                            case 5 -> System.out.println("    Volviendo al menú principal...");
+                            default -> System.out.println("    Ingrese una opción válida... ");
+                        }
+                    } while (subOpcion != 5);
+                }
+                case "6"    -> System.out.println(" Hasta luego... ");
                 default     -> System.out.println(" Ingrese una opción válida");
             }
-        } while (!opcion.equals("5"));
+        } while (!opcion.equals("6"));
     }
 }
 

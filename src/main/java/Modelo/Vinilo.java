@@ -120,11 +120,13 @@ public class Vinilo {
         this.fechaRegistro = fechaRegistro;
     }
 
+
+
     // ----- TO STRING -----
     @Override
     public String toString() {
         return  "\t ["  + idVinilo        +
-                "] "     + nombre          +
+                "] "    + nombre          +
                 " | "   + artista         +
                 " | "   + peso            +
                 " | "   + tamanio         +

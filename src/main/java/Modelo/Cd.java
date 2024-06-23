@@ -11,7 +11,7 @@ public class Cd {
     private Long        minutos;
     private Long        precio;
     private Integer     stock;
-    private Date fechaRegistro;
+    private Date        fechaRegistro;
 
 
 
@@ -105,12 +105,12 @@ public class Cd {
     @Override
     public String toString() {
         return  "\t ["  + idCd              +
-                "] "     + nombre          +
-                " | "   + artista         +
-                " | "   + anioPublicacion +
-                " | "   + minutos         +
-                " | "   + precio          +
-                " | "   + stock           +
+                "] "    + nombre            +
+                " | "   + artista           +
+                " | "   + anioPublicacion   +
+                " | "   + minutos           +
+                " | "   + precio            +
+                " | "   + stock             +
                 " | "   + fechaRegistro;
     }
 }

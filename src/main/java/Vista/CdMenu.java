@@ -6,13 +6,19 @@ import Controlador.*;
 import Modelo.Cd;
 
 public class CdMenu {
+    // ----- ATRIBUTOS -----
     private Scanner lector;
     private CdControlador controlador;
 
+
+
+    // ----- CONSTRUCTOR -----
     public CdMenu() {
         this.lector         = new Scanner(System.in);
         this.controlador    = new CdControlador();
     }
+
+
 
     private Cd ingresarDatosCd() {
         System.out.print("                    Nombre           : ");
@@ -36,7 +42,6 @@ public class CdMenu {
 
         return new Cd(null, nombre, artista, anioPublicacion, minutos, precio, stock, new Date());
     }
-
 
 
 

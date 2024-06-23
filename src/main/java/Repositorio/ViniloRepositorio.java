@@ -32,8 +32,8 @@ public class ViniloRepositorio implements Repositorio<Vinilo> {
 
     @Override
     public List<Vinilo> listar() {
-        String sql = "SELECT * FROM Vinilos";
-        List<Vinilo> vinilos = new ArrayList<>();
+        String sql              = "SELECT * FROM Vinilos";
+        List<Vinilo> vinilos    = new ArrayList<>();
         try (Statement stmt = getConnection().createStatement();
              ResultSet rs   = stmt.executeQuery(sql)) {
             while (rs.next()) {

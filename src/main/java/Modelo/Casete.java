@@ -7,7 +7,7 @@ public class Casete {
     private Long        idCasete;
     private String      nombre;
     private String      artista;
-    private Integer     anioPublicacion; // Cambiado a Integer
+    private Integer     anioPublicacion;
     private Long        minutos;
     private String      material;
     private Long        tamanio;
@@ -126,7 +126,7 @@ public class Casete {
     @Override
     public String toString() {
         return  "\t ["  + idCasete          +
-                "] "     + nombre            +
+                "] "     + nombre           +
                 " | "   + artista           +
                 " | "   + anioPublicacion   +
                 " | "   + minutos           +
