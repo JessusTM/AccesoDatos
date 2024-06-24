@@ -8,7 +8,7 @@ import java.util.List;
 
 public class CdRepositorio implements Repositorio<Cd> {
     private Connection getConnection() throws SQLException {
-        return ConexionBaseDatos.getInstance();
+        return ConexionBaseDatos.getConnection();
     }
 
 
@@ -32,8 +32,9 @@ public class CdRepositorio implements Repositorio<Cd> {
     public List<Cd> listar() {
         String sql      = "SELECT * FROM Cds";
         List<Cd> cds    = new ArrayList<>();
-        try (Statement stmt = getConnection().createStatement();
-             ResultSet rs   = stmt.executeQuery(sql)) {
+        try (Connection conn    = getConnection();
+             Statement  stmt    = conn.createStatement();
+             ResultSet  rs      = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 Cd c = crearCd(rs);
                 cds.add(c);
@@ -50,7 +51,8 @@ public class CdRepositorio implements Repositorio<Cd> {
     public Cd porId(Long id) {
         Cd cd       = null;
         String sql  = "SELECT * FROM Cds WHERE idcd = ?";
-        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+        try (Connection         conn = getConnection();
+             PreparedStatement  stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -73,7 +75,8 @@ public class CdRepositorio implements Repositorio<Cd> {
         } else {
             sql = "INSERT INTO Cds(nombre, artista, anio_publicacion, minutos, precio, stock, fecha_registro) VALUES (?, ?, ?, ?, ?, ?, ?)";
         }
-        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+        try (Connection         conn = getConnection();
+             PreparedStatement  stmt = conn.prepareStatement(sql)) {
             stmt.setString  (1, cd.getNombre()              );
             stmt.setString  (2, cd.getArtista()             );
             stmt.setInt     (3, cd.getAnioPublicacion()     );
@@ -95,7 +98,8 @@ public class CdRepositorio implements Repositorio<Cd> {
     @Override
     public void eliminar(Long id) {
         String sql = "DELETE FROM Cds WHERE idcd = ?";
-        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+        try (Connection         conn = getConnection();
+             PreparedStatement  stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {

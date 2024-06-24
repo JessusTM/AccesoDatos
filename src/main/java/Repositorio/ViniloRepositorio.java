@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ViniloRepositorio implements Repositorio<Vinilo> {
     private Connection getConnection() throws SQLException {
-        return ConexionBaseDatos.getInstance();
+        return ConexionBaseDatos.getConnection();
     }
 
 
@@ -34,8 +34,9 @@ public class ViniloRepositorio implements Repositorio<Vinilo> {
     public List<Vinilo> listar() {
         String sql              = "SELECT * FROM Vinilos";
         List<Vinilo> vinilos    = new ArrayList<>();
-        try (Statement stmt = getConnection().createStatement();
-             ResultSet rs   = stmt.executeQuery(sql)) {
+        try (Connection conn        = getConnection();
+             Statement  stmt        = conn.createStatement();
+             ResultSet  rs          = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 Vinilo v = crearVinilo(rs);
                 vinilos.add(v);
@@ -52,7 +53,8 @@ public class ViniloRepositorio implements Repositorio<Vinilo> {
     public Vinilo porId(Long id) {
         String sql      = "SELECT * FROM Vinilos WHERE idvinilo = ?";
         Vinilo vinilo   = null;
-        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+        try (Connection         conn = getConnection();
+             PreparedStatement  stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -75,7 +77,8 @@ public class ViniloRepositorio implements Repositorio<Vinilo> {
         } else {
             sql = "INSERT INTO Vinilos(nombre, artista, peso, tamanio, descripcion, color, precio, stock, fecha_registro) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         }
-        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+        try (Connection         conn = getConnection();
+             PreparedStatement  stmt = conn.prepareStatement(sql)) {
             stmt.setString  (1, vinilo.getNombre()      );
             stmt.setString  (2, vinilo.getArtista()     );
             stmt.setLong    (3, vinilo.getPeso()        );
@@ -99,7 +102,8 @@ public class ViniloRepositorio implements Repositorio<Vinilo> {
 
     @Override
     public void eliminar(Long id) {
-        try (PreparedStatement stmt = getConnection().prepareStatement("DELETE FROM Vinilos WHERE idvinilo = ?")) {
+        try (Connection         conn = getConnection();
+             PreparedStatement  stmt = conn.prepareStatement("DELETE FROM Vinilos WHERE idvinilo = ?")) {
             stmt.setLong(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {

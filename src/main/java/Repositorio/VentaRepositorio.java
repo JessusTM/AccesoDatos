@@ -9,7 +9,7 @@ import java.util.List;
 
 public class VentaRepositorio implements Repositorio<Venta> {
     private Connection getConnection() throws SQLException {
-        return ConexionBaseDatos.getInstance();
+        return ConexionBaseDatos.getConnection();
     }
 
 
@@ -30,8 +30,9 @@ public class VentaRepositorio implements Repositorio<Venta> {
     public List<Venta> listar() {
         String sql          = "SELECT * FROM Ventas";
         List<Venta> ventas  = new ArrayList<>();
-        try (Statement stmt = getConnection().createStatement();
-             ResultSet rs   = stmt.executeQuery(sql)) {
+        try (Connection conn = getConnection();
+             Statement  stmt = conn.createStatement();
+             ResultSet  rs   = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 Venta v = crearVenta(rs);
                 ventas.add(v);
@@ -48,7 +49,8 @@ public class VentaRepositorio implements Repositorio<Venta> {
     public Venta porId(Long id) {
         Venta venta = null;
         String sql  = "SELECT * FROM Ventas WHERE idventa = ?";
-        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+        try (Connection         conn = getConnection();
+             PreparedStatement  stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -66,7 +68,8 @@ public class VentaRepositorio implements Repositorio<Venta> {
     @Override
     public void guardar(Venta venta) {
         String sql = "INSERT INTO Ventas (idproducto, tipoproducto, cantidad, fechaventa) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+        try (Connection         conn = getConnection();
+             PreparedStatement  stmt = conn.prepareStatement(sql)) {
             stmt.setLong    (1, venta.getIdProducto());
             stmt.setString  (2, venta.getTipoProducto());
             stmt.setInt     (3, venta.getCantidad());
@@ -82,7 +85,8 @@ public class VentaRepositorio implements Repositorio<Venta> {
     @Override
     public void eliminar(Long id) {
         String sql = "DELETE FROM Ventas WHERE idventa = ?";
-        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+        try (Connection         conn = getConnection();
+             PreparedStatement  stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {

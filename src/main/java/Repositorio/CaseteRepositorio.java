@@ -8,7 +8,7 @@ import java.util.List;
 
 public class CaseteRepositorio implements Repositorio<Casete> {
     private Connection getConnection() throws SQLException {
-        return ConexionBaseDatos.getInstance();
+        return ConexionBaseDatos.getConnection();
     }
 
 
@@ -34,8 +34,9 @@ public class CaseteRepositorio implements Repositorio<Casete> {
     public List<Casete> listar() {
         String sql              = "SELECT * FROM Casetes";
         List<Casete> casetes    = new ArrayList<>();
-        try (Statement stmt = getConnection().createStatement();
-             ResultSet rs   = stmt.executeQuery(sql)) {
+        try (Connection conn = getConnection();
+             Statement  stmt = conn.createStatement();
+             ResultSet  rs   = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 Casete c = crearCasete(rs);
                 casetes.add(c);
@@ -52,7 +53,8 @@ public class CaseteRepositorio implements Repositorio<Casete> {
     public Casete porId(Long id) {
         Casete casete   = null;
         String sql      = "SELECT * FROM Casetes WHERE idcasete = ?";
-        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+        try (Connection         conn = getConnection();
+             PreparedStatement  stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -75,7 +77,8 @@ public class CaseteRepositorio implements Repositorio<Casete> {
         } else {
             sql = "INSERT INTO Casetes(nombre, artista, anio_publicacion, minutos, material, tamanio, precio, stock, fecha_registro) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         }
-        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+        try (Connection         conn = getConnection();
+             PreparedStatement  stmt = conn.prepareStatement(sql)) {
             stmt.setString      (1, casete.getNombre()          );
             stmt.setString      (2, casete.getArtista()         );
             stmt.setInt         (3, casete.getAnioPublicacion() );
@@ -98,7 +101,8 @@ public class CaseteRepositorio implements Repositorio<Casete> {
 
     @Override
     public void eliminar(Long id) {
-        try (PreparedStatement stmt = getConnection().prepareStatement("DELETE FROM Casetes WHERE idcasete = ?")) {
+        try (Connection         conn = getConnection();
+             PreparedStatement  stmt = conn.prepareStatement("DELETE FROM Casetes WHERE idcasete = ?")) {
             stmt.setLong(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {

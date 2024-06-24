@@ -22,7 +22,7 @@ public class VentaControlador {
     }
 
     private Connection getConnection() throws SQLException {
-        return ConexionBaseDatos.getInstance();
+        return ConexionBaseDatos.getConnection();
     }
 
 
