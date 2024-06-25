@@ -3,6 +3,7 @@
 # BASE DE DATOS
 
 CREATE DATABASE musica;
+
 USE musica;
 
 # TABLAS
