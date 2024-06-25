@@ -1,12 +1,14 @@
-## Nombres: Benjamin Fernandez, Jesus Tapia
+### Nombres: Benjamin Fernandez, Jesus Tapia
 
-# BASE DE DATOS
+# scriptSQL
+
+## BASE DE DATOS
 
 CREATE DATABASE musica;
 
 USE musica;
 
-# TABLAS
+## TABLAS
 
 CREATE TABLE Casetes (
     idcasete SERIAL PRIMARY KEY,
@@ -54,7 +56,7 @@ CREATE TABLE Ventas (
     fechaVenta DATE NOT NULL
 );
 
-# INSERCION DE DATOS
+## INSERCION DE DATOS
 
 INSERT INTO Casetes (nombre, artista, anio_publicacion, minutos, material, tamanio, precio, stock, fecha_registro)
 VALUES 
