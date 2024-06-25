@@ -7,12 +7,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class VentaControlador {
     private VentaRepositorio    repositorioVenta;
     private ViniloRepositorio   repositorioVinilo;
     private CdRepositorio       repositorioCd;
     private CaseteRepositorio   repositorioCasete;
+    private final ReentrantLock lock = new ReentrantLock();
 
     public VentaControlador() {
         this.repositorioVenta   = new VentaRepositorio();
@@ -25,21 +27,24 @@ public class VentaControlador {
         return ConexionBaseDatos.getConnection();
     }
 
-
-
     public void guardarVentaVinilo(Long idVinilo, Integer cantidad) {
-        Vinilo vinilo = repositorioVinilo.porId(idVinilo);
-        if (vinilo != null) {
-            if (vinilo.getStock() >= cantidad) {
-                Date fechaActual    = new Date();
-                Venta venta         = new Venta(null, idVinilo, "Vinilo", cantidad, fechaActual);
-                repositorioVenta.guardar(venta);
-                actualizarStockVinilo(idVinilo, cantidad);
+        lock.lock();
+        try {
+            Vinilo vinilo = repositorioVinilo.porId(idVinilo);
+            if (vinilo != null) {
+                if (vinilo.getStock() >= cantidad) {
+                    Date fechaActual    = new Date();
+                    Venta venta         = new Venta(null, idVinilo, "Vinilo", cantidad, fechaActual);
+                    repositorioVenta.guardar(venta);
+                    actualizarStockVinilo(idVinilo, cantidad);
+                } else {
+                    System.out.println("        No hay suficiente stock disponible...");
+                }
             } else {
-                System.out.println("        No hay suficiente stock disponible...");
+                System.out.println("        Vinilo no encontrado...");
             }
-        } else {
-            System.out.println("        Vinilo no encontrado...");
+        } finally {
+            lock.unlock();
         }
     }
 
@@ -59,18 +64,23 @@ public class VentaControlador {
 
 
     public void guardarVentaCd(Long idCd, Integer cantidad) {
-        Cd cd = repositorioCd.porId(idCd);
-        if (cd != null) {
-            if (cd.getStock() >= cantidad) {
-                Date fechaActual    = new Date();
-                Venta venta         = new Venta(null, idCd, "Cd", cantidad, fechaActual);
-                repositorioVenta.guardar(venta);
-                actualizarStockCd(idCd, cantidad);
+        lock.lock();
+        try {
+            Cd cd = repositorioCd.porId(idCd);
+            if (cd != null) {
+                if (cd.getStock() >= cantidad) {
+                    Date fechaActual    = new Date();
+                    Venta venta         = new Venta(null, idCd, "Cd", cantidad, fechaActual);
+                    repositorioVenta.guardar(venta);
+                    actualizarStockCd(idCd, cantidad);
+                } else {
+                    System.out.println("        No hay suficiente stock disponible...");
+                }
             } else {
-                System.out.println("        No hay suficiente stock disponible...");
+                System.out.println("        CD no encontrado...");
             }
-        } else {
-            System.out.println("        CD no encontrado...");
+        } finally {
+            lock.unlock();
         }
     }
 
@@ -90,20 +100,26 @@ public class VentaControlador {
 
 
     public void guardarVentaCasete(Long idCasete, Integer cantidad) {
-        Casete casete = repositorioCasete.porId(idCasete);
-        if (casete != null) {
-            if (casete.getStock() >= cantidad) {
-                Date fechaActual    = new Date();
-                Venta venta         = new Venta(null, idCasete, "Casete", cantidad, fechaActual);
-                repositorioVenta.guardar(venta);
-                actualizarStockCasete(idCasete, cantidad);
+        lock.lock();
+        try {
+            Casete casete = repositorioCasete.porId(idCasete);
+            if (casete != null) {
+                if (casete.getStock() >= cantidad) {
+                    Date fechaActual    = new Date();
+                    Venta venta         = new Venta(null, idCasete, "Casete", cantidad, fechaActual);
+                    repositorioVenta.guardar(venta);
+                    actualizarStockCasete(idCasete, cantidad);
+                } else {
+                    System.out.println("        No hay suficiente stock disponible...");
+                }
             } else {
-                System.out.println("        No hay suficiente stock disponible...");
+                System.out.println("        Casete no encontrado...");
             }
-        } else {
-            System.out.println("        CD no encontrado...");
+        } finally {
+            lock.unlock();
         }
     }
+
 
     private void actualizarStockCasete(Long idCasete, int cantidadVenta) {
         String sql = "UPDATE Casetes SET stock = stock - ? WHERE idcasete = ?";
@@ -121,7 +137,12 @@ public class VentaControlador {
 
 
     public void eliminarVenta(Long idVenta) {
-        repositorioVenta.eliminar(idVenta);
+        lock.lock();
+        try {
+            repositorioVenta.eliminar(idVenta);
+        } finally {
+            lock.unlock();
+        }
     }
 
     public java.util.List<Venta> listarVentas() {

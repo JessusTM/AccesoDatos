@@ -2,18 +2,24 @@ package Controlador;
 
 import Modelo.Cd;
 import Repositorio.CdRepositorio;
-
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class CdControlador {
     private CdRepositorio repositorio;
+    private final ReentrantLock lock = new ReentrantLock();
 
     public CdControlador() {
         this.repositorio = new CdRepositorio();
     }
 
     public void guardarCd(Cd cd) {
-        repositorio.guardar(cd);
+        lock.lock();
+        try {
+            repositorio.guardar(cd);
+        } finally {
+            lock.unlock();
+        }
     }
 
     public List<Cd> listarCds() {
@@ -25,6 +31,11 @@ public class CdControlador {
     }
 
     public void eliminarCd(Long id) {
-        repositorio.eliminar(id);
+        lock.lock();
+        try {
+            repositorio.eliminar(id);
+        } finally {
+            lock.unlock();
+        }
     }
 }

@@ -2,18 +2,24 @@ package Controlador;
 
 import Modelo.*;
 import Repositorio.CaseteRepositorio;
-
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class CaseteControlador {
     private CaseteRepositorio repositorio;
+    private final ReentrantLock lock = new ReentrantLock();
 
     public CaseteControlador() {
         this.repositorio = new CaseteRepositorio();
     }
 
     public void guardarCasete(Casete casete) {
-        repositorio.guardar(casete);
+        lock.lock();
+        try {
+            repositorio.guardar(casete);
+        } finally {
+            lock.unlock();
+        }
     }
 
     public List<Casete> listarCasetes() {
@@ -25,6 +31,11 @@ public class CaseteControlador {
     }
 
     public void eliminarCasete(Long id) {
-        repositorio.eliminar(id);
+        lock.lock();
+        try {
+            repositorio.eliminar(id);
+        } finally {
+            lock.unlock();
+        }
     }
 }

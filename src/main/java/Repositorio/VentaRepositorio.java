@@ -68,29 +68,51 @@ public class VentaRepositorio implements Repositorio<Venta> {
     @Override
     public void guardar(Venta venta) {
         String sql = "INSERT INTO Ventas (idproducto, tipoproducto, cantidad, fechaventa) VALUES (?, ?, ?, ?)";
-        try (Connection         conn = getConnection();
-             PreparedStatement  stmt = conn.prepareStatement(sql)) {
-            stmt.setLong    (1, venta.getIdProducto());
-            stmt.setString  (2, venta.getTipoProducto());
-            stmt.setInt     (3, venta.getCantidad());
-            stmt.setDate    (4, new java.sql.Date(venta.getFechaVenta().getTime()));
-            stmt.executeUpdate();
+        try (Connection conn = getConnection()) {
+            conn.setAutoCommit(false);
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setLong    (1, venta.getIdProducto()   );
+                stmt.setString  (2, venta.getTipoProducto() );
+                stmt.setInt     (3, venta.getCantidad()     );
+                stmt.setDate    (4, new java.sql.Date(venta.getFechaVenta().getTime()));
+                stmt.executeUpdate();
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
 
 
+
+
     @Override
     public void eliminar(Long id) {
-        String sql = "DELETE FROM Ventas WHERE idventa = ?";
-        try (Connection         conn = getConnection();
-             PreparedStatement  stmt = conn.prepareStatement(sql)) {
-            stmt.setLong(1, id);
-            stmt.executeUpdate();
+        String lockSql = "SELECT idventa FROM Ventas WHERE idventa = ? FOR UPDATE";
+        try (Connection conn = getConnection()) {
+            conn.setAutoCommit(false);
+            try (PreparedStatement lockStmt = conn.prepareStatement(lockSql)) {
+                lockStmt.setLong(1, id);
+                lockStmt.executeQuery();
+            }
+            try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Ventas WHERE idventa = ?")) {
+                stmt.setLong(1, id);
+                stmt.executeUpdate();
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 }

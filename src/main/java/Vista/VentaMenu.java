@@ -123,6 +123,7 @@ public class VentaMenu {
 
     public void listarVentas() {
         System.out.println("                ----------- VENTAS ----------");
+        System.out.println(Venta.getHeader());
         controlador.listarVentas().forEach(System.out::println);
     }
 

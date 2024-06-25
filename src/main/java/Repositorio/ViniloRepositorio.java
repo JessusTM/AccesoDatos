@@ -69,45 +69,80 @@ public class ViniloRepositorio implements Repositorio<Vinilo> {
 
 
 
+
+
     @Override
     public void guardar(Vinilo vinilo) {
         String sql;
-        if (vinilo.getIdVinilo() != null && vinilo.getIdVinilo() > 0) {
+        boolean isUpdate = vinilo.getIdVinilo() != null && vinilo.getIdVinilo() > 0;
+        if (isUpdate) {
             sql = "UPDATE Vinilos SET nombre = ?, artista = ?, peso = ?, tamanio = ?, descripcion = ?, color = ?, precio = ?, stock = ? WHERE idvinilo = ?";
         } else {
             sql = "INSERT INTO Vinilos(nombre, artista, peso, tamanio, descripcion, color, precio, stock, fecha_registro) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         }
-        try (Connection         conn = getConnection();
-             PreparedStatement  stmt = conn.prepareStatement(sql)) {
-            stmt.setString  (1, vinilo.getNombre()      );
-            stmt.setString  (2, vinilo.getArtista()     );
-            stmt.setLong    (3, vinilo.getPeso()        );
-            stmt.setLong    (4, vinilo.getTamanio()     );
-            stmt.setString  (5, vinilo.getDescripcion() );
-            stmt.setString  (6, vinilo.getColor()       );
-            stmt.setLong    (7, vinilo.getPrecio()      );
-            stmt.setInt     (8, vinilo.getStock()       );
-            if (vinilo.getIdVinilo() != null && vinilo.getIdVinilo() > 0) {
-                stmt.setLong(9, vinilo.getIdVinilo());
-            } else {
-                stmt.setDate(9, new java.sql.Date(vinilo.getFechaRegistro().getTime()));
+
+        try (Connection conn = getConnection()) {
+            conn.setAutoCommit(false);
+            if (isUpdate) {
+                String lockSql = "SELECT idvinilo FROM Vinilos WHERE idvinilo = ? FOR UPDATE";
+                try (PreparedStatement lockStmt = conn.prepareStatement(lockSql)) {
+                    lockStmt.setLong(1, vinilo.getIdVinilo());
+                    lockStmt.executeQuery();
+                }
             }
-            stmt.executeUpdate();
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString  (1, vinilo.getNombre()       );
+                stmt.setString  (2, vinilo.getArtista()      );
+                stmt.setLong    (3, vinilo.getPeso()         );
+                stmt.setLong    (4, vinilo.getTamanio()      );
+                stmt.setString  (5, vinilo.getDescripcion()  );
+                stmt.setString  (6, vinilo.getColor()        );
+                stmt.setLong    (7, vinilo.getPrecio()       );
+                stmt.setInt     (8, vinilo.getStock()        );
+                if (isUpdate) {
+                    stmt.setLong(9, vinilo.getIdVinilo());
+                } else {
+                    stmt.setDate(9, new java.sql.Date(vinilo.getFechaRegistro().getTime()));
+                }
+                stmt.executeUpdate();
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
 
 
 
+
+
     @Override
     public void eliminar(Long id) {
-        try (Connection         conn = getConnection();
-             PreparedStatement  stmt = conn.prepareStatement("DELETE FROM Vinilos WHERE idvinilo = ?")) {
-            stmt.setLong(1, id);
-            stmt.executeUpdate();
+        String lockSql = "SELECT idvinilo FROM Vinilos WHERE idvinilo = ? FOR UPDATE";
+        try (Connection conn = getConnection()) {
+            conn.setAutoCommit(false);
+            try (PreparedStatement lockStmt = conn.prepareStatement(lockSql)) {
+                lockStmt.setLong(1, id);
+                lockStmt.executeQuery();
+            }
+            try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Vinilos WHERE idvinilo = ?")) {
+                stmt.setLong(1, id);
+                stmt.executeUpdate();
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
+
 }

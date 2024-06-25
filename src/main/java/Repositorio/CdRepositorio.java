@@ -70,40 +70,71 @@ public class CdRepositorio implements Repositorio<Cd> {
     @Override
     public void guardar(Cd cd) {
         String sql;
-        if (cd.getIdCd() != null && cd.getIdCd() > 0) {
+        boolean isUpdate = cd.getIdCd() != null && cd.getIdCd() > 0;
+        if (isUpdate) {
             sql = "UPDATE Cds SET nombre = ?, artista = ?, anio_publicacion = ?, minutos = ?, precio = ?, stock = ?, fecha_registro = ? WHERE idcd = ?";
         } else {
             sql = "INSERT INTO Cds(nombre, artista, anio_publicacion, minutos, precio, stock, fecha_registro) VALUES (?, ?, ?, ?, ?, ?, ?)";
         }
-        try (Connection         conn = getConnection();
-             PreparedStatement  stmt = conn.prepareStatement(sql)) {
-            stmt.setString  (1, cd.getNombre()              );
-            stmt.setString  (2, cd.getArtista()             );
-            stmt.setInt     (3, cd.getAnioPublicacion()     );
-            stmt.setLong    (4, cd.getMinutos()             );
-            stmt.setLong    (5, cd.getPrecio()              );
-            stmt.setInt     (6, cd.getStock()               );
-            stmt.setDate    (7, new java.sql.Date(cd.getFechaRegistro().getTime()));
-            if (cd.getIdCd() != null && cd.getIdCd() > 0) {
-                stmt.setLong(8, cd.getIdCd());
+
+        try (Connection conn = getConnection()) {
+            conn.setAutoCommit(false);
+            if (isUpdate) {
+                String lockSql = "SELECT idcd FROM Cds WHERE idcd = ? FOR UPDATE";
+                try (PreparedStatement lockStmt = conn.prepareStatement(lockSql)) {
+                    lockStmt.setLong(1, cd.getIdCd());
+                    lockStmt.executeQuery();
+                }
             }
-            stmt.executeUpdate();
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString  (1, cd.getNombre()              );
+                stmt.setString  (2, cd.getArtista()             );
+                stmt.setInt     (3, cd.getAnioPublicacion()     );
+                stmt.setLong    (4, cd.getMinutos()             );
+                stmt.setLong    (5, cd.getPrecio()              );
+                stmt.setInt     (6, cd.getStock()               );
+                stmt.setDate    (7, new java.sql.Date(cd.getFechaRegistro().getTime()));
+                if (isUpdate) {
+                    stmt.setLong(8, cd.getIdCd());
+                }
+                stmt.executeUpdate();
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
 
 
+
+
     @Override
     public void eliminar(Long id) {
-        String sql = "DELETE FROM Cds WHERE idcd = ?";
-        try (Connection         conn = getConnection();
-             PreparedStatement  stmt = conn.prepareStatement(sql)) {
-            stmt.setLong(1, id);
-            stmt.executeUpdate();
+        String lockSql = "SELECT idcd FROM Cds WHERE idcd = ? FOR UPDATE";
+        try (Connection conn = getConnection()) {
+            conn.setAutoCommit(false);
+            try (PreparedStatement lockStmt = conn.prepareStatement(lockSql)) {
+                lockStmt.setLong(1, id);
+                lockStmt.executeQuery();
+            }
+            try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Cds WHERE idcd = ?")) {
+                stmt.setLong(1, id);
+                stmt.executeUpdate();
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 }
