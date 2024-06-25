@@ -1,6 +1,6 @@
 # AccesoDatos
-script SQL:
 
+# BASE DE DATOS
 
 CREATE DATABASE musica;
 USE musica;
