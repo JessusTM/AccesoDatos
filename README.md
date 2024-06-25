@@ -4,9 +4,8 @@
 
 ## BASE DE DATOS
 
+DROP DATABASE IF EXISTS musica;
 CREATE DATABASE musica;
-
-USE musica;
 
 ## TABLAS
 
